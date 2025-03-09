@@ -26,20 +26,21 @@ struct ContentView: View {
                             )
                     }
                 }
+                .padding(.horizontal, 8)
                 
                 // Grid lines and content
                 ScrollView {
                     ZStack(alignment: .top) {
                         // Vertical grid lines
                         HStack(spacing: 0) {
-                            ForEach(0..<5) { _ in
+                            ForEach(0..<5) { index in
                                 Rectangle()
                                     .fill(Color.clear)
                                     .frame(maxWidth: .infinity)
                                     .overlay(
                                         Rectangle()
                                             .fill(Color.gray.opacity(0.2))
-                                            .frame(width: 1),
+                                            .frame(width: index == 4 ? 0 : 1), // Don't show last line
                                         alignment: .trailing
                                     )
                             }
@@ -340,10 +341,12 @@ struct TaskDetailView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var taskManager: TaskManager
     @State private var selectedStatus: Task.TaskStatus
+    @State private var notes: String
     
     init(task: Task) {
         self.task = task
         _selectedStatus = State(initialValue: task.status)
+        _notes = State(initialValue: task.notes)
     }
     
     var body: some View {
@@ -371,6 +374,15 @@ struct TaskDetailView: View {
                     .onChange(of: selectedStatus) { newStatus in
                         taskManager.updateTaskStatus(task, newStatus: newStatus)
                     }
+                }
+                
+                Section(header: Text("Notes").font(.title3)) {
+                    TextEditor(text: $notes)
+                        .frame(minHeight: 100)
+                        .font(.body)
+                        .onChange(of: notes) { newValue in
+                            taskManager.updateTaskNotes(task, notes: newValue)
+                        }
                 }
             }
             .navigationTitle("Task Details")

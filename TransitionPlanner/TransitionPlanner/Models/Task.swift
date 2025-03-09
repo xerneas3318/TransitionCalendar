@@ -10,6 +10,7 @@ struct Task: Identifiable, Codable {
     var endAge: Int
     var status: TaskStatus = .notStarted
     var isWorkInProgress: Bool = false
+    var notes: String = ""
     
     enum TaskStatus: String, Codable, CaseIterable {
         case notStarted = "Not Started"

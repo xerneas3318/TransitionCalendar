@@ -1,12 +1,20 @@
 import Foundation
 
 class TaskManager: ObservableObject {
-    @Published var tasks: [Task]
+    @Published var tasks: [Task] {
+        didSet {
+            saveTasks()
+        }
+    }
     @Published var childBirthday: Date {
         didSet {
             updateTaskStatuses()
+            saveChildBirthday()
         }
     }
+    
+    private let tasksKey = "SavedTasks"
+    private let birthdayKey = "SavedBirthday"
     
     var childAge: Int {
         let calendar = Calendar.current
@@ -15,9 +23,32 @@ class TaskManager: ObservableObject {
     }
     
     init(childBirthday: Date = Calendar.current.date(byAdding: .year, value: -12, to: Date()) ?? Date()) {
-        self.childBirthday = childBirthday
-        self.tasks = TaskManager.createInitialTasks()
+        // Load saved tasks or create initial tasks if none exist
+        if let savedTasksData = UserDefaults.standard.data(forKey: tasksKey),
+           let decodedTasks = try? JSONDecoder().decode([Task].self, from: savedTasksData) {
+            self.tasks = decodedTasks
+        } else {
+            self.tasks = TaskManager.createInitialTasks()
+        }
+        
+        // Load saved birthday or use default
+        if let savedBirthday = UserDefaults.standard.object(forKey: birthdayKey) as? Date {
+            self.childBirthday = savedBirthday
+        } else {
+            self.childBirthday = childBirthday
+        }
+        
         updateTaskStatuses()
+    }
+    
+    private func saveTasks() {
+        if let encoded = try? JSONEncoder().encode(tasks) {
+            UserDefaults.standard.set(encoded, forKey: tasksKey)
+        }
+    }
+    
+    private func saveChildBirthday() {
+        UserDefaults.standard.set(childBirthday, forKey: birthdayKey)
     }
     
     func updateTaskStatuses() {
@@ -35,6 +66,12 @@ class TaskManager: ObservableObject {
     func updateTaskStatus(_ task: Task, newStatus: Task.TaskStatus) {
         if let index = tasks.firstIndex(where: { $0.id == task.id }) {
             tasks[index].status = newStatus
+        }
+    }
+    
+    func updateTaskNotes(_ task: Task, notes: String) {
+        if let index = tasks.firstIndex(where: { $0.id == task.id }) {
+            tasks[index].notes = notes
         }
     }
     
