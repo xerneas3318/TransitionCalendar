@@ -85,136 +85,196 @@ class TaskManager: ObservableObject {
         }
     }
     
+    func resetToDefaultTasks() {
+        tasks = TaskManager.createInitialTasks()
+        UserDefaults.standard.removeObject(forKey: tasksKey)
+    }
+    
     static func createInitialTasks() -> [Task] {
         return [
-            // Transition Planning
+            // Transition Planning (exactly 8 tasks)
+            // Under 12 (1 task)
             Task(title: "IEP Participation",
-                 description: "Have your child participate at their IEP meetings; learn about student-led IEPs",
+                 description: "Have your child participate at IEP meetings and learn about student-led IEPs to build self-advocacy skills",
                  category: .transitionPlanning,
-                 startAge: 8,
-                 endAge: 22),
+                 startAge: 0,
+                 endAge: 12),
+            
+            // 12-16 (3 tasks)
             Task(title: "Disability Understanding",
-                 description: "Teach child about their disability; identify strengths and needs",
-                 category: .transitionPlanning,
-                 startAge: 8,
-                 endAge: 16),
-            Task(title: "Individual Transition Plan",
-                 description: "Learn about an Individual Transition Plan (ITP); ask 504 team about transition planning",
-                 category: .transitionPlanning,
-                 startAge: 8,
-                 endAge: 16),
-            Task(title: "Self-care Routines",
-                 description: "Develop self-care routines; assign chores",
-                 category: .transitionPlanning,
-                 startAge: 8,
-                 endAge: 14),
-            Task(title: "High School Planning",
-                 description: "High school diploma? New pathway to diploma? Certificate of completion?",
+                 description: "Teach child about their disability and work together to identify their personal strengths and needs",
                  category: .transitionPlanning,
                  startAge: 12,
                  endAge: 16),
-            Task(title: "Post-High School Planning",
-                 description: "Apply for college and/or other post-high school programs and opportunities",
+            
+            Task(title: "Transition Plan",
+                 description: "Learn about Individual Transition Plan (ITP) and engage with 504 team about transition planning strategies",
+                 category: .transitionPlanning,
+                 startAge: 12,
+                 endAge: 16),
+            
+            Task(title: "Self-Care Skills",
+                 description: "Develop self-care routines and build responsibility through assigned household chores",
+                 category: .transitionPlanning,
+                 startAge: 12,
+                 endAge: 16),
+            
+            // 16-18 (2 tasks)
+            Task(title: "Graduation Options",
+                 description: "Explore options for high school completion: standard diploma, alternative pathway, or certificate of completion",
                  category: .transitionPlanning,
                  startAge: 16,
                  endAge: 18),
-            Task(title: "Legal Documents",
-                 description: "Obtain Driver's License/ID, Passport, Register to Vote, Selective Service",
+            
+            Task(title: "ITP Review",
+                 description: "Create and frequently review a robust Individual Transition Plan, including input from 504 team for transition planning",
+                 category: .transitionPlanning,
+                 startAge: 16,
+                 endAge: 18),
+            
+            // 18-22 (2 tasks)
+            Task(title: "Post-High School",
+                 description: "Research and apply for college and explore other post-high school programs and opportunities",
                  category: .transitionPlanning,
                  startAge: 18,
                  endAge: 22),
-                 
+            
+            Task(title: "Legal Documents",
+                 description: "Obtain necessary identification and complete civic responsibilities: Driver's License/ID, Passport, Register to Vote, Selective Service",
+                 category: .transitionPlanning,
+                 startAge: 18,
+                 endAge: 22),
+            
             // Education and Training
-            Task(title: "Decision Making Assessment",
-                 description: "Determine youth's ability to make decisions at 18",
+            // 12-16
+            Task(title: "Annual Assessments",
+                 description: "Complete transition assessments including interest/career inventories, independent living skills, education/training needs, and employment readiness",
                  category: .educationTraining,
                  startAge: 12,
                  endAge: 16),
-            Task(title: "Healthcare Transition",
-                 description: "Navigate transition from pediatric to adult healthcare; review insurance coverage; investigate rider of continued eligibility",
+            
+            // 16-18
+            Task(title: "Decision Making",
+                 description: "Evaluate youth's ability to make decisions at age 18 and explore appropriate support options if needed",
                  category: .educationTraining,
                  startAge: 16,
                  endAge: 18),
-                 
-            // Adult Life
+            
             Task(title: "Letter of Intent",
-                 description: "Start a Letter of Intent; review on an annual basis",
+                 description: "Create a Letter of Intent documenting wishes and preferences, and establish a process for annual review",
+                 category: .educationTraining,
+                 startAge: 16,
+                 endAge: 18),
+            
+            // 18-22
+            Task(title: "Healthcare Plan",
+                 description: "Plan transition from pediatric to adult healthcare, including insurance coverage review and rider of continued eligibility",
+                 category: .educationTraining,
+                 startAge: 18,
+                 endAge: 22),
+            
+            // Adult Life
+            // 12-16
+            Task(title: "Support Services",
+                 description: "Research adult support options including Department of Rehabilitation, Regional Center, education/training, housing, and assistive technology",
                  category: .adultLife,
                  startAge: 12,
-                 endAge: 22),
-            Task(title: "Adult Options",
-                 description: "Explore adulting options: Department of Rehabilitation, Regional Center, education/training, housing, assistive technology",
-                 category: .adultLife,
-                 startAge: 12,
-                 endAge: 22),
+                 endAge: 16),
+            
             Task(title: "Public Benefits",
-                 description: "Investigate public benefits: CalFresh, In-Home Supportive Services (IHSS), Supplemental Security Income (SSI), MediCal, Medicare",
+                 description: "Research eligibility and application process for CalFresh, IHSS, SSI, MediCal, Medicare, and other public benefits",
                  category: .adultLife,
                  startAge: 12,
-                 endAge: 22),
+                 endAge: 16),
+            
             Task(title: "Financial Planning",
-                 description: "Explore financial/estate planning: ABLE accounts, special needs trusts, conservatorship, durable power of attorney, supported decision making",
+                 description: "Explore financial and estate planning options: ABLE accounts, special needs trusts, conservatorship, power of attorney, and supported decision making",
                  category: .adultLife,
                  startAge: 12,
-                 endAge: 22),
-            Task(title: "Regional Center Services",
-                 description: "Regional Center clients: understand post secondary services; explore Self-Determination",
+                 endAge: 16),
+            
+            // 16-18
+            Task(title: "Transportation",
+                 description: "Develop comprehensive strategies for independent transportation and mobility in the community",
                  category: .adultLife,
                  startAge: 16,
                  endAge: 18),
-                 
-            // Self-Advocacy
-            Task(title: "Transportation Strategies",
-                 description: "Develop transportation/mobility strategies",
-                 category: .selfAdvocacy,
-                 startAge: 12,
-                 endAge: 18),
+            
+            // 18-22
+            Task(title: "Regional Center",
+                 description: "For Regional Center clients: Understand available post-secondary services and explore Self-Determination program options",
+                 category: .adultLife,
+                 startAge: 18,
+                 endAge: 22),
+            
+            Task(title: "Support Team",
+                 description: "Build a comprehensive network of supporters and caregivers to provide continued support in the future",
+                 category: .adultLife,
+                 startAge: 18,
+                 endAge: 22),
+            
+            // Ongoing/22+
             Task(title: "Independence Skills",
-                 description: "Increase independence at home; promote independence in choice-making, communication, life skills, and more",
+                 description: "Build and maintain independence in daily living, including choice-making, communication, living skills, and other key areas",
+                 category: .adultLife,
+                 startAge: 22,
+                 endAge: 99),
+            
+            // Self-Advocacy
+            // Under 12
+            Task(title: "Self-Advocacy",
+                 description: "Develop early self-advocacy skills through strength-based person centered planning and create a person centered plan",
                  category: .selfAdvocacy,
-                 startAge: 8,
-                 endAge: 22),
-            Task(title: "Self-Advocacy Skills",
-                 description: "Develop self-advocacy/determination skills early. Research strength-based person centered planning; develop a person centered plan",
-                 category: .selfAdvocacy,
-                 startAge: 12,
-                 endAge: 22),
-            Task(title: "Assistive Technology",
-                 description: "Investigate assistive technology tools that increase involvement and opportunities",
-                 category: .selfAdvocacy,
-                 startAge: 12,
-                 endAge: 22),
-            Task(title: "Health Education",
-                 description: "Talk about puberty, sexuality, and safety",
+                 startAge: 0,
+                 endAge: 12),
+            
+            // 12-16
+            Task(title: "Assistive Tech",
+                 description: "Research and implement assistive technology tools that can increase participation and create new opportunities",
                  category: .selfAdvocacy,
                  startAge: 12,
                  endAge: 16),
-            Task(title: "Disability Rights",
-                 description: "Explore history of disability rights",
+            
+            // 16-18
+            Task(title: "Health Education",
+                 description: "Address important developmental topics including puberty, sexuality, and personal safety",
                  category: .selfAdvocacy,
                  startAge: 16,
+                 endAge: 18),
+            
+            // 18-22
+            Task(title: "Disability Rights",
+                 description: "Learn about the history and importance of disability rights movements and advocacy",
+                 category: .selfAdvocacy,
+                 startAge: 18,
                  endAge: 22),
-                 
+            
             // Work Preparation
+            // 12-16
             Task(title: "Work Programs",
-                 description: "Explore WorkAbility and/or transition partnership programs; understand Department of Rehabilitation services, including student services and supportive employment services",
+                 description: "Explore WorkAbility, transition partnerships, and Department of Rehabilitation services including student and supportive employment options",
                  category: .workPreparation,
                  startAge: 12,
-                 endAge: 22),
-            Task(title: "Career Planning",
-                 description: "Develop a postsecondary employment goal as part of your ITP; develop and review a career plan",
+                 endAge: 16),
+            
+            // 16-18
+            Task(title: "Career Goals",
+                 description: "Develop post-secondary employment goals as part of your ITP and create a comprehensive career plan to review regularly",
                  category: .workPreparation,
                  startAge: 16,
                  endAge: 18),
+            
+            // 18-22
             Task(title: "Work Experience",
-                 description: "Build work experience: intern/volunteer/job; practicing filling out job applications, writing resumes",
+                 description: "Build practical work experience through internships, volunteer work, or jobs. Practice job applications and resume writing",
                  category: .workPreparation,
-                 startAge: 16,
-                 endAge: 18),
-            Task(title: "Employment Services",
-                 description: "Regional Center clients: explore supportive employment/work services and Paid Internship program",
+                 startAge: 18,
+                 endAge: 22),
+            
+            Task(title: "Employment Support",
+                 description: "For Regional Center clients: Explore supportive employment services and opportunities in the Paid Internship program",
                  category: .workPreparation,
-                 startAge: 16,
+                 startAge: 18,
                  endAge: 22)
         ]
     }

@@ -4,6 +4,7 @@ struct ContentView: View {
     @EnvironmentObject var taskManager: TaskManager
     @State private var showingAgePrompt = true
     @State private var selectedTask: Task? = nil
+    @State private var showingResetConfirmation = false
     
     var body: some View {
         NavigationView {
@@ -16,12 +17,12 @@ struct ContentView: View {
                             .padding(.vertical, 4)
                             .padding(.horizontal, 6)
                             .frame(maxWidth: .infinity)
-                            .background(Color.purple)
+                            .background(Color(red: 101/255, green: 0/255, blue: 102/255))
                             .foregroundColor(.white)
                             .overlay(
                                 Rectangle()
                                     .frame(width: 1)
-                                    .foregroundColor(Color.white.opacity(0.3)),
+                                    .foregroundColor(Color.white.opacity(0.5)),
                                 alignment: .trailing
                             )
                     }
@@ -39,7 +40,7 @@ struct ContentView: View {
                                     .frame(maxWidth: .infinity)
                                     .overlay(
                                         Rectangle()
-                                            .fill(Color.gray.opacity(0.2))
+                                            .fill(Color.white.opacity(0.1))
                                             .frame(width: index == 4 ? 0 : 1), // Don't show last line
                                         alignment: .trailing
                                     )
@@ -56,7 +57,9 @@ struct ContentView: View {
                         .padding(.vertical, 8)
                     }
                 }
+                .background(Color(red: 74/255, green: 74/255, blue: 74/255))
             }
+            .background(Color(red: 74/255, green: 74/255, blue: 74/255))
             .navigationTitle("Transition Planner")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -64,17 +67,58 @@ struct ContentView: View {
                     Text("Transition Planner")
                         .font(.system(size: 28))
                         .fontWeight(.bold)
+                        .foregroundColor(Color(red: 81/255, green: 70/255, blue: 127/255))
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { showingAgePrompt = true }) {
                         Image(systemName: "gearshape.fill")
-                            .foregroundColor(.black)
+                            .foregroundColor(Color(red: 81/255, green: 70/255, blue: 127/255))
                     }
                 }
             }
         }
         .sheet(isPresented: $showingAgePrompt) {
-            BirthdayPromptView(isPresented: $showingAgePrompt)
+            NavigationView {
+                VStack(spacing: 20) {
+                    DatePicker(
+                        "Child's Birth Date",
+                        selection: $taskManager.childBirthday,
+                        displayedComponents: [.date]
+                    )
+                    .datePickerStyle(.graphical)
+                    
+                    Divider()
+                    
+                    Button(action: {
+                        showingResetConfirmation = true
+                    }) {
+                        HStack {
+                            Image(systemName: "arrow.counterclockwise")
+                            Text("Reset to Default Tasks")
+                        }
+                        .foregroundColor(.red)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.red.opacity(0.1))
+                        .cornerRadius(10)
+                    }
+                    
+                    Spacer()
+                }
+                .padding()
+                .navigationTitle("Settings")
+                .navigationBarItems(trailing: Button("Done") {
+                    showingAgePrompt = false
+                })
+                .alert("Reset Tasks", isPresented: $showingResetConfirmation) {
+                    Button("Cancel", role: .cancel) { }
+                    Button("Reset", role: .destructive) {
+                        taskManager.resetToDefaultTasks()
+                    }
+                } message: {
+                    Text("Are you sure you want to reset all tasks to their default state? This action cannot be undone.")
+                }
+            }
         }
         .sheet(item: $selectedTask) { task in
             TaskDetailView(task: task)
@@ -100,8 +144,9 @@ struct CategoryTimelineView: View {
                     .frame(width: 28, height: 28)
                 
                 Text(category.rawValue)
-                    .font(.title3)
-                    .foregroundColor(category.color)
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundColor(.white)
+                    .shadow(color: .black, radius: 2, x: 0, y: 1)
             }
             .padding(.horizontal, 8)
             .padding(.vertical, 2)
@@ -174,6 +219,7 @@ struct TimelineTaskView: View {
                     .foregroundColor(.white)
                     .padding(.horizontal, 6)
                     .lineLimit(1)
+                    .shadow(color: .black, radius: 1.5, x: 0, y: 1)
                     .frame(width: width - 8)
                     .position(
                         x: startX + width / 2,
