@@ -1,5 +1,16 @@
 import SwiftUI
 
+private struct IsSpanishKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
+extension EnvironmentValues {
+    var isSpanish: Bool {
+        get { self[IsSpanishKey.self] }
+        set { self[IsSpanishKey.self] = newValue }
+    }
+}
+
 struct ContentView: View {
     @EnvironmentObject var taskManager: TaskManager
     @State private var showingAgePrompt = true
@@ -154,6 +165,7 @@ struct ContentView: View {
         }
         .sheet(item: $selectedTask) { task in
             TaskDetailView(task: task)
+                .environment(\.isSpanish, isSpanish)
         }
     }
 }
@@ -421,6 +433,7 @@ struct TaskDetailView: View {
     @EnvironmentObject var taskManager: TaskManager
     @State private var selectedStatus: Task.TaskStatus
     @State private var notes: String
+    @Environment(\.isSpanish) var isSpanish
     
     init(task: Task) {
         self.task = task
@@ -431,23 +444,26 @@ struct TaskDetailView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Task Details").font(.title3)) {
+                Section(header: Text(isSpanish ? "Detalles de la Tarea" : "Task Details").font(.title3)) {
                     Text(task.title)
                         .font(.title3)
                     Text(task.description)
                         .font(.body)
                         .foregroundColor(.secondary)
-                    Text("Age Range: \(task.startAge)-\(task.endAge)")
+                    Text(isSpanish ? "Rango de Edad: \(task.startAge)-\(task.endAge)" : "Age Range: \(task.startAge)-\(task.endAge)")
                         .font(.body)
                         .foregroundColor(.secondary)
                 }
                 
-                Section(header: Text("Status").font(.title3)) {
-                    Picker("Status", selection: $selectedStatus) {
+                Section(header: Text(isSpanish ? "Estado" : "Status").font(.title3)) {
+                    Picker(isSpanish ? "Estado" : "Status", selection: $selectedStatus) {
                         ForEach(Task.TaskStatus.allCases, id: \.self) { status in
-                            Label(status.rawValue, systemImage: status.icon)
-                                .foregroundColor(status.color)
-                                .tag(status)
+                            Label(
+                                isSpanish ? status.spanishValue : status.rawValue,
+                                systemImage: status.icon
+                            )
+                            .foregroundColor(status.color)
+                            .tag(status)
                         }
                     }
                     .onChange(of: selectedStatus) { newStatus in
@@ -455,7 +471,7 @@ struct TaskDetailView: View {
                     }
                 }
                 
-                Section(header: Text("Notes").font(.title3)) {
+                Section(header: Text(isSpanish ? "Notas" : "Notes").font(.title3)) {
                     TextEditor(text: $notes)
                         .frame(minHeight: 100)
                         .font(.body)

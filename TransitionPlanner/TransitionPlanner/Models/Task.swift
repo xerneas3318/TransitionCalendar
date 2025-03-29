@@ -32,6 +32,14 @@ struct Task: Identifiable, Codable {
             case .completed: return .green
             }
         }
+        
+        var spanishValue: String {
+            switch self {
+            case .notStarted: return "No Iniciado"
+            case .inProgress: return "En Progreso"
+            case .completed: return "Completado"
+            }
+        }
     }
 }
 
