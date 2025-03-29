@@ -3,11 +3,17 @@ import SwiftUI
 
 struct Translations {
     static let shared = Translations()
+    static var isSpanish: Bool = false {
+        didSet {
+            print("Language changed to: \(isSpanish ? "Spanish" : "English")")
+        }
+    }
     
     private var isSpanish = false
     
     mutating func setLanguage(_ spanish: Bool) {
         isSpanish = spanish
+        Translations.isSpanish = spanish
     }
     
     var title: String {

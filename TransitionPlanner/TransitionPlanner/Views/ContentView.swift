@@ -106,6 +106,7 @@ struct ContentView: View {
                     Button(action: {
                         isSpanish.toggle()
                         translations.setLanguage(isSpanish)
+                        taskManager.isSpanish = isSpanish
                     }) {
                         HStack {
                             Image(systemName: "globe")

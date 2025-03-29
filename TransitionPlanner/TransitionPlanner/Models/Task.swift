@@ -27,9 +27,9 @@ struct Task: Identifiable, Codable {
         
         var color: Color {
             switch self {
-            case .notStarted: return Color(red: 255/255, green: 223/255, blue: 119/255)
-            case .inProgress: return Color(red: 247/255, green: 205/255, blue: 208/255)
-            case .completed: return Color(red: 157/255, green: 147/255, blue: 60/255)
+            case .notStarted: return .gray
+            case .inProgress: return .blue
+            case .completed: return .green
             }
         }
     }
@@ -86,4 +86,4 @@ enum Category: String, Codable, CaseIterable {
             return translations.workPreparation
         }
     }
-} 
+}
