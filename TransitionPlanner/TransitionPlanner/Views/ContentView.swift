@@ -5,19 +5,29 @@ struct ContentView: View {
     @State private var showingAgePrompt = true
     @State private var selectedTask: Task? = nil
     @State private var showingResetConfirmation = false
+    @State private var isSpanish = false
+    @State private var translations = Translations.shared
     
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
                 // Fixed age ranges header
                 HStack(spacing: 0) {
-                    ForEach(["Under 12", "12 - 16", "16 - 18", "18 - 22", "22+"], id: \.self) { range in
+                    ForEach([
+                        translations.under12,
+                        translations.ageRange12to16,
+                        translations.ageRange16to18,
+                        translations.ageRange18to22,
+                        translations.ageRange22plus
+                    ], id: \.self) { range in
                         Text(range)
-                            .font(.system(size: 14))
+                            .font(.system(size: 12))
+                            .minimumScaleFactor(0.6)
+                            .lineLimit(1)
                             .padding(.vertical, 4)
-                            .padding(.horizontal, 6)
+                            .padding(.horizontal, 2)
                             .frame(maxWidth: .infinity)
-                            .background(Color(red: 101/255, green: 0/255, blue: 102/255))
+                            .background(Color(red: 81/255, green: 70/255, blue: 127/255))
                             .foregroundColor(.white)
                             .overlay(
                                 Rectangle()
@@ -52,40 +62,61 @@ struct ContentView: View {
                         VStack(spacing: 2) {
                             ForEach(Category.allCases, id: \.self) { category in
                                 CategoryTimelineView(category: category, selectedTask: $selectedTask)
+                                    .environment(\.translations, translations)
+                                    .padding(.horizontal, 8)
                             }
                         }
                         .padding(.vertical, 8)
                     }
                 }
-                .background(Color(red: 74/255, green: 74/255, blue: 74/255))
+                .background(Color(red: 155/255, green: 155/255, blue: 155/255))
             }
-            .background(Color(red: 74/255, green: 74/255, blue: 74/255))
-            .navigationTitle("Transition Planner")
+            .background(Color(red: 155/255, green: 155/255, blue: 155/255))
+            .navigationTitle(translations.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Transition Planner")
+                    Text(translations.title)
                         .font(.system(size: 28))
                         .fontWeight(.bold)
-                        .foregroundColor(Color(red: 81/255, green: 70/255, blue: 127/255))
+                        .foregroundColor(.white)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { showingAgePrompt = true }) {
                         Image(systemName: "gearshape.fill")
-                            .foregroundColor(Color(red: 81/255, green: 70/255, blue: 127/255))
+                            .foregroundColor(.white)
                     }
                 }
             }
         }
+        .environment(\.translations, translations)
         .sheet(isPresented: $showingAgePrompt) {
             NavigationView {
                 VStack(spacing: 20) {
                     DatePicker(
-                        "Child's Birth Date",
+                        translations.childBirthDate,
                         selection: $taskManager.childBirthday,
                         displayedComponents: [.date]
                     )
                     .datePickerStyle(.graphical)
+                    
+                    Divider()
+                    
+                    // Language Toggle
+                    Button(action: {
+                        isSpanish.toggle()
+                        translations.setLanguage(isSpanish)
+                    }) {
+                        HStack {
+                            Image(systemName: "globe")
+                            Text(translations.changeToSpanish)
+                        }
+                        .foregroundColor(.blue)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue.opacity(0.1))
+                        .cornerRadius(10)
+                    }
                     
                     Divider()
                     
@@ -94,7 +125,7 @@ struct ContentView: View {
                     }) {
                         HStack {
                             Image(systemName: "arrow.counterclockwise")
-                            Text("Reset to Default Tasks")
+                            Text(translations.resetToDefault)
                         }
                         .foregroundColor(.red)
                         .padding()
@@ -106,17 +137,17 @@ struct ContentView: View {
                     Spacer()
                 }
                 .padding()
-                .navigationTitle("Settings")
-                .navigationBarItems(trailing: Button("Done") {
+                .navigationTitle(translations.settings)
+                .navigationBarItems(trailing: Button(translations.done) {
                     showingAgePrompt = false
                 })
-                .alert("Reset Tasks", isPresented: $showingResetConfirmation) {
-                    Button("Cancel", role: .cancel) { }
-                    Button("Reset", role: .destructive) {
+                .alert(translations.resetTasks, isPresented: $showingResetConfirmation) {
+                    Button(translations.cancel, role: .cancel) { }
+                    Button(translations.reset, role: .destructive) {
                         taskManager.resetToDefaultTasks()
                     }
                 } message: {
-                    Text("Are you sure you want to reset all tasks to their default state? This action cannot be undone.")
+                    Text(translations.resetConfirmation)
                 }
             }
         }
@@ -130,6 +161,7 @@ struct CategoryTimelineView: View {
     let category: Category
     @Binding var selectedTask: Task?
     @EnvironmentObject var taskManager: TaskManager
+    @Environment(\.translations) var translations
     
     var tasksInCategory: [Task] {
         taskManager.tasks.filter { $0.category == category }
@@ -143,7 +175,7 @@ struct CategoryTimelineView: View {
                     .foregroundColor(category.color)
                     .frame(width: 28, height: 28)
                 
-                Text(category.rawValue)
+                Text(category.localizedName(translations))
                     .font(.system(size: 16, weight: .bold))
                     .foregroundColor(.white)
                     .shadow(color: .black, radius: 2, x: 0, y: 1)

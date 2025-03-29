@@ -71,4 +71,19 @@ enum Category: String, Codable, CaseIterable {
             return Color(red: 101/255, green: 0/255, blue: 102/255) // #650066 deep purple
         }
     }
+    
+    func localizedName(_ translations: Translations) -> String {
+        switch self {
+        case .transitionPlanning:
+            return translations.transitionPlanning
+        case .educationTraining:
+            return translations.educationTraining
+        case .adultLife:
+            return translations.adultLife
+        case .selfAdvocacy:
+            return translations.selfAdvocacy
+        case .workPreparation:
+            return translations.workPreparation
+        }
+    }
 } 
