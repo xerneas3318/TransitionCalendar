@@ -40,6 +40,14 @@ struct Task: Identifiable, Codable {
             case .completed: return "Completado"
             }
         }
+        
+        var vietnameseValue: String {
+            switch self {
+            case .notStarted: return "Chưa Bắt Đầu"
+            case .inProgress: return "Đang Thực Hiện"
+            case .completed: return "Hoàn Thành"
+            }
+        }
     }
 }
 

@@ -9,105 +9,114 @@ struct Translations {
         }
     }
     
-    private var isSpanish = false
+    static var isVietnamese: Bool = false {
+        didSet {
+            print("Language changed to: \(isVietnamese ? "Vietnamese" : "English")")
+        }
+    }
     
-    mutating func setLanguage(_ spanish: Bool) {
+    private var isSpanish = false
+    private var isVietnamese = false
+    
+    mutating func setLanguage(spanish: Bool = false, vietnamese: Bool = false) {
         isSpanish = spanish
+        isVietnamese = vietnamese
         Translations.isSpanish = spanish
+        Translations.isVietnamese = vietnamese
     }
     
     var title: String {
-        isSpanish ? "PHP Planificador" : "PHP Planner"
+        isVietnamese ? "PHP Kế Hoạch" : (isSpanish ? "PHP Planificador" : "PHP Planner")
     }
     
     var settings: String {
-        isSpanish ? "Ajustes" : "Settings"
+        isVietnamese ? "Cài Đặt" : (isSpanish ? "Ajustes" : "Settings")
     }
     
     var done: String {
-        isSpanish ? "Hecho" : "Done"
+        isVietnamese ? "Xong" : (isSpanish ? "Hecho" : "Done")
     }
     
     var resetTasks: String {
-        isSpanish ? "Restablecer Tareas" : "Reset Tasks"
+        isVietnamese ? "Đặt Lại Công Việc" : (isSpanish ? "Restablecer Tareas" : "Reset Tasks")
     }
     
     var resetConfirmation: String {
-        isSpanish ? "¿Está seguro de que desea restablecer todas las tareas a su estado predeterminado? Esta acción no se puede deshacer." : "Are you sure you want to reset all tasks to their default state? This action cannot be undone."
+        isVietnamese ? "Bạn có chắc chắn muốn đặt lại tất cả các công việc về trạng thái mặc định? Hành động này không thể hoàn tác." : (isSpanish ? "¿Está seguro de que desea restablecer todas las tareas a su estado predeterminado? Esta acción no se puede deshacer." : "Are you sure you want to reset all tasks to their default state? This action cannot be undone.")
     }
     
     var cancel: String {
-        isSpanish ? "Cancelar" : "Cancel"
+        isVietnamese ? "Hủy" : (isSpanish ? "Cancelar" : "Cancel")
     }
     
     var reset: String {
-        isSpanish ? "Restablecer" : "Reset"
+        isVietnamese ? "Đặt Lại" : (isSpanish ? "Restablecer" : "Reset")
     }
     
     var childBirthDate: String {
-        isSpanish ? "Fecha de Nacimiento del Niño" : "Child's Birth Date"
+        isVietnamese ? "Ngày Sinh của Trẻ" : (isSpanish ? "Fecha de Nacimiento del Niño" : "Child's Birth Date")
     }
     
     var resetToDefault: String {
-        isSpanish ? "Restablecer a Tareas Predeterminadas" : "Reset to Default Tasks"
+        isVietnamese ? "Đặt Lại về Công Việc Mặc Định" : (isSpanish ? "Restablecer a Tareas Predeterminadas" : "Reset to Default Tasks")
     }
     
     var changeToSpanish: String {
-        isSpanish ? "Cambiar a Inglés" : "Change to Spanish"
+        isVietnamese ? "Chuyển sang Tiếng Việt" : (isSpanish ? "Cambiar a Inglés" : "Change to Spanish")
     }
     
     var under12: String {
-        isSpanish ? "< 12" : "Under 12"
+        isVietnamese ? "< 12" : (isSpanish ? "< 12" : "Under 12")
     }
     
     var ageRange12to16: String {
-        isSpanish ? "12 - 16" : "12 - 16"
+        isVietnamese ? "12 - 16" : (isSpanish ? "12 - 16" : "12 - 16")
     }
     
     var ageRange16to18: String {
-        isSpanish ? "16 - 18" : "16 - 18"
+        isVietnamese ? "16 - 18" : (isSpanish ? "16 - 18" : "16 - 18")
     }
     
     var ageRange18to22: String {
-        isSpanish ? "18 - 22" : "18 - 22"
+        isVietnamese ? "18 - 22" : (isSpanish ? "18 - 22" : "18 - 22")
     }
     
     var ageRange22plus: String {
-        isSpanish ? "22+" : "22+"
+        isVietnamese ? "22+" : (isSpanish ? "22+" : "22+")
     }
     
     // Category translations
     var transitionPlanning: String {
-        isSpanish ? "Planificación de Transición" : "Transition Planning"
+        isVietnamese ? "Kế Hoạch Chuyển Tiếp" : (isSpanish ? "Planificación de Transición" : "Transition Planning")
     }
     
     var educationTraining: String {
-        isSpanish ? "Educación y Capacitación" : "Education and Training"
+        isVietnamese ? "Giáo Dục và Đào Tạo" : (isSpanish ? "Educación y Capacitación" : "Education and Training")
     }
     
     var adultLife: String {
-        isSpanish ? "Vida Adulta" : "Adult Life"
+        isVietnamese ? "Cuộc Sống Người Lớn" : (isSpanish ? "Vida Adulta" : "Adult Life")
     }
     
     var selfAdvocacy: String {
-        isSpanish ? "Auto-Defensa" : "Self-Advocacy"
+        isVietnamese ? "Tự Vận Động" : (isSpanish ? "Auto-Defensa" : "Self-Advocacy")
     }
     
     var workPreparation: String {
-        isSpanish ? "Preparación para el Trabajo" : "Work Preparation"
+        isVietnamese ? "Chuẩn Bị Công Việc" : (isSpanish ? "Preparación para el Trabajo" : "Work Preparation")
     }
     
     // Task status translations
     var notStarted: String {
-        isSpanish ? "No Iniciado" : "Not Started"
+        isVietnamese ? "Chưa Bắt Đầu" : (isSpanish ? "No Iniciado" : "Not Started")
     }
     
     var inProgress: String {
-        isSpanish ? "En Progreso" : "In Progress"
+        isVietnamese ? "Đang Thực Hiện" : (isSpanish ? "En Progreso" : "In Progress")
     }
     
     var completed: String {
-        isSpanish ? "Completado" : "Completed"
+        isVietnamese ? "Hoàn Thành" : (isSpanish ? "Completado" : "Completed")
     }
 }
 

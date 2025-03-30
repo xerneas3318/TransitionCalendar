@@ -4,10 +4,19 @@ private struct IsSpanishKey: EnvironmentKey {
     static let defaultValue = false
 }
 
+private struct IsVietnameseKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
 extension EnvironmentValues {
     var isSpanish: Bool {
         get { self[IsSpanishKey.self] }
         set { self[IsSpanishKey.self] = newValue }
+    }
+    
+    var isVietnamese: Bool {
+        get { self[IsVietnameseKey.self] }
+        set { self[IsVietnameseKey.self] = newValue }
     }
 }
 
@@ -17,6 +26,7 @@ struct ContentView: View {
     @State private var selectedTask: Task? = nil
     @State private var showingResetConfirmation = false
     @State private var isSpanish = false
+    @State private var isVietnamese = false
     @State private var translations = Translations.shared
     
     var body: some View {
@@ -83,7 +93,6 @@ struct ContentView: View {
                 .background(Color(red: 155/255, green: 155/255, blue: 155/255))
             }
             .background(Color(red: 155/255, green: 155/255, blue: 155/255))
-            .navigationTitle(translations.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
@@ -106,37 +115,59 @@ struct ContentView: View {
                 VStack(spacing: 20) {
                     Section {
                         HStack {
-                            Text(isSpanish ? "Fecha de Nacimiento:" : "Birthday:")
+                            Text(isVietnamese ? "Ngày Sinh:" : (isSpanish ? "Fecha de Nacimiento:" : "Birthday:"))
                                 .foregroundColor(.primary)
                             Spacer()
                             DatePicker(
-                                isSpanish ? "Fecha de Nacimiento" : "Birthday",
+                                isVietnamese ? "Ngày Sinh" : (isSpanish ? "Fecha de Nacimiento" : "Birthday"),
                                 selection: $taskManager.childBirthday,
                                 displayedComponents: .date
                             )
                             .datePickerStyle(.compact)
                             .labelsHidden()
-                            .environment(\.locale, isSpanish ? Locale(identifier: "es") : Locale(identifier: "en"))
+                            .environment(\.locale, isVietnamese ? Locale(identifier: "vi") : (isSpanish ? Locale(identifier: "es") : Locale(identifier: "en")))
                         }
                     }
                     
                     Divider()
                     
-                    // Language Toggle
-                    Button(action: {
-                        isSpanish.toggle()
-                        translations.setLanguage(isSpanish)
-                        taskManager.isSpanish = isSpanish
-                    }) {
-                        HStack {
-                            Image(systemName: "globe")
-                            Text(translations.changeToSpanish)
+                    // Language Toggles
+                    VStack(spacing: 10) {
+                        Button(action: {
+                            isSpanish.toggle()
+                            isVietnamese = false
+                            translations.setLanguage(spanish: isSpanish, vietnamese: false)
+                            taskManager.isSpanish = isSpanish
+                            taskManager.isVietnamese = isVietnamese
+                        }) {
+                            HStack {
+                                Image(systemName: "globe")
+                                Text(isSpanish ? "Switch to English" : "Cambiar a Español")
+                            }
+                            .foregroundColor(.blue)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.blue.opacity(0.1))
+                            .cornerRadius(10)
                         }
-                        .foregroundColor(.blue)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.blue.opacity(0.1))
-                        .cornerRadius(10)
+                        
+                        Button(action: {
+                            isVietnamese.toggle()
+                            isSpanish = false
+                            translations.setLanguage(spanish: false, vietnamese: isVietnamese)
+                            taskManager.isSpanish = isSpanish
+                            taskManager.isVietnamese = isVietnamese
+                        }) {
+                            HStack {
+                                Image(systemName: "globe")
+                                Text(isVietnamese ? "Switch to English" : "Chuyển sang Tiếng Việt")
+                            }
+                            .foregroundColor(.blue)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.blue.opacity(0.1))
+                            .cornerRadius(10)
+                        }
                     }
                     
                     Divider()
@@ -175,6 +206,7 @@ struct ContentView: View {
         .sheet(item: $selectedTask) { task in
             TaskDetailView(task: task)
                 .environment(\.isSpanish, isSpanish)
+                .environment(\.isVietnamese, isVietnamese)
         }
     }
 }
@@ -443,6 +475,7 @@ struct TaskDetailView: View {
     @State private var selectedStatus: Task.TaskStatus
     @State private var notes: String
     @Environment(\.isSpanish) var isSpanish
+    @Environment(\.isVietnamese) var isVietnamese
     
     init(task: Task) {
         self.task = task
@@ -453,20 +486,20 @@ struct TaskDetailView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text(isSpanish ? "Detalles de la Tarea" : "Task Details").font(.title3)) {
+                Section(header: Text(isVietnamese ? "Chi Tiết Công Việc" : (isSpanish ? "Detalles de la Tarea" : "Task Details")).font(.title3)) {
                     Text(task.title)
                         .font(.title3)
                     Text(task.description)
                         .font(.body)
                         .foregroundColor(.secondary)
-                    Text(isSpanish ? "Rango de Edad: \(task.startAge)-\(task.endAge)" : "Age Range: \(task.startAge)-\(task.endAge)")
+                    Text(isVietnamese ? "Độ Tuổi: \(task.startAge)-\(task.endAge)" : (isSpanish ? "Rango de Edad: \(task.startAge)-\(task.endAge)" : "Age Range: \(task.startAge)-\(task.endAge)"))
                         .font(.body)
                         .foregroundColor(.secondary)
                     
-                    Picker(isSpanish ? "Estado" : "Status", selection: $selectedStatus) {
+                    Picker(isVietnamese ? "Trạng Thái" : (isSpanish ? "Estado" : "Status"), selection: $selectedStatus) {
                         ForEach(Task.TaskStatus.allCases, id: \.self) { status in
                             Label(
-                                isSpanish ? status.spanishValue : status.rawValue,
+                                isVietnamese ? status.vietnameseValue : (isSpanish ? status.spanishValue : status.rawValue),
                                 systemImage: status.icon
                             )
                             .foregroundColor(status.color)
@@ -478,7 +511,7 @@ struct TaskDetailView: View {
                     }
                 }
                 
-                Section(header: Text(isSpanish ? "Notas" : "Notes").font(.title3)) {
+                Section(header: Text(isVietnamese ? "Ghi Chú" : (isSpanish ? "Notas" : "Notes")).font(.title3)) {
                     TextEditor(text: $notes)
                         .frame(minHeight: 100)
                         .font(.body)
@@ -487,7 +520,7 @@ struct TaskDetailView: View {
                         }
                 }
             }
-            .navigationBarItems(trailing: Button(isSpanish ? "Hecho" : "Done") { dismiss() })
+            .navigationBarItems(trailing: Button(isVietnamese ? "Xong" : (isSpanish ? "Hecho" : "Done")) { dismiss() })
         }
     }
 }
