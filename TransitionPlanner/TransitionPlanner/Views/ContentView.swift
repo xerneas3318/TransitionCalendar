@@ -1,5 +1,11 @@
 import SwiftUI
 
+enum Language {
+    case english
+    case spanish
+    case vietnamese
+}
+
 private struct IsSpanishKey: EnvironmentKey {
     static let defaultValue = false
 }
@@ -28,6 +34,7 @@ struct ContentView: View {
     @State private var isSpanish = false
     @State private var isVietnamese = false
     @State private var translations = Translations.shared
+    @State private var selectedLanguage: Language = .english
     
     var body: some View {
         NavigationView {
@@ -131,44 +138,23 @@ struct ContentView: View {
                     
                     Divider()
                     
-                    // Language Toggles
+                    // Language Selection
                     VStack(spacing: 10) {
-                        Button(action: {
-                            isSpanish.toggle()
-                            isVietnamese = false
-                            translations.setLanguage(spanish: isSpanish, vietnamese: false)
-                            taskManager.isSpanish = isSpanish
-                            taskManager.isVietnamese = isVietnamese
-                        }) {
-                            HStack {
-                                Image(systemName: "globe")
-                                Text(isSpanish ? "Switch to English" : "Cambiar a Español")
-                            }
-                            .foregroundColor(.blue)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color.blue.opacity(0.1))
-                            .cornerRadius(10)
+                        Picker("Language", selection: $selectedLanguage) {
+                            Text("English").tag(Language.english)
+                            Text("Español").tag(Language.spanish)
+                            Text("Tiếng Việt").tag(Language.vietnamese)
                         }
-                        
-                        Button(action: {
-                            isVietnamese.toggle()
-                            isSpanish = false
-                            translations.setLanguage(spanish: false, vietnamese: isVietnamese)
+                        .pickerStyle(.segmented)
+                        .onChange(of: selectedLanguage) { newValue in
+                            isSpanish = (newValue == .spanish)
+                            isVietnamese = (newValue == .vietnamese)
+                            translations.setLanguage(spanish: isSpanish, vietnamese: isVietnamese)
                             taskManager.isSpanish = isSpanish
                             taskManager.isVietnamese = isVietnamese
-                        }) {
-                            HStack {
-                                Image(systemName: "globe")
-                                Text(isVietnamese ? "Switch to English" : "Chuyển sang Tiếng Việt")
-                            }
-                            .foregroundColor(.blue)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color.blue.opacity(0.1))
-                            .cornerRadius(10)
                         }
                     }
+                    .padding(.horizontal)
                     
                     Divider()
                     
