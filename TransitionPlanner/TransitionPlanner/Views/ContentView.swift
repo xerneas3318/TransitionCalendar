@@ -104,12 +104,21 @@ struct ContentView: View {
         .sheet(isPresented: $showingAgePrompt) {
             NavigationView {
                 VStack(spacing: 20) {
-                    DatePicker(
-                        translations.childBirthDate,
-                        selection: $taskManager.childBirthday,
-                        displayedComponents: [.date]
-                    )
-                    .datePickerStyle(.graphical)
+                    Section {
+                        HStack {
+                            Text(isSpanish ? "Fecha de Nacimiento:" : "Birthday:")
+                                .foregroundColor(.primary)
+                            Spacer()
+                            DatePicker(
+                                isSpanish ? "Fecha de Nacimiento" : "Birthday",
+                                selection: $taskManager.childBirthday,
+                                displayedComponents: .date
+                            )
+                            .datePickerStyle(.compact)
+                            .labelsHidden()
+                            .environment(\.locale, isSpanish ? Locale(identifier: "es") : Locale(identifier: "en"))
+                        }
+                    }
                     
                     Divider()
                     
@@ -453,9 +462,7 @@ struct TaskDetailView: View {
                     Text(isSpanish ? "Rango de Edad: \(task.startAge)-\(task.endAge)" : "Age Range: \(task.startAge)-\(task.endAge)")
                         .font(.body)
                         .foregroundColor(.secondary)
-                }
-                
-                Section(header: Text(isSpanish ? "Estado" : "Status").font(.title3)) {
+                    
                     Picker(isSpanish ? "Estado" : "Status", selection: $selectedStatus) {
                         ForEach(Task.TaskStatus.allCases, id: \.self) { status in
                             Label(
@@ -480,8 +487,7 @@ struct TaskDetailView: View {
                         }
                 }
             }
-            .navigationTitle("Task Details")
-            .navigationBarItems(trailing: Button("Done") { dismiss() })
+            .navigationBarItems(trailing: Button(isSpanish ? "Hecho" : "Done") { dismiss() })
         }
     }
 }

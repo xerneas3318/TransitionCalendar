@@ -158,7 +158,7 @@ class TaskManager: ObservableObject {
                  category: .transitionPlanning,
                  startAge: 18,
                  endAge: 22),
-            
+                 
             // Education and Training
             // 12-16
             Task(title: "Annual Assessments",
@@ -173,7 +173,7 @@ class TaskManager: ObservableObject {
                  category: .educationTraining,
                  startAge: 16,
                  endAge: 18),
-            
+                 
             Task(title: "Letter of Intent",
                  description: "Create a Letter of Intent documenting wishes and preferences, and establish a process for annual review",
                  category: .educationTraining,
@@ -213,7 +213,7 @@ class TaskManager: ObservableObject {
                  category: .adultLife,
                  startAge: 16,
                  endAge: 18),
-            
+                 
             // 18-22
             Task(title: "Regional Center",
                  description: "For Regional Center clients: Understand available post-secondary services and explore Self-Determination program options",
@@ -262,7 +262,7 @@ class TaskManager: ObservableObject {
                  category: .selfAdvocacy,
                  startAge: 18,
                  endAge: 22),
-            
+                 
             // Work Preparation
             // 12-16
             Task(title: "Work Programs",
